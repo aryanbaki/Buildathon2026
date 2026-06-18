@@ -1,6 +1,6 @@
-# Buildathon2026
 ## Folder Structure
-text
+
+```text
 fleet-document-intelligence/
 │
 ├── backend/
@@ -60,7 +60,6 @@ fleet-document-intelligence/
 │
 ├── data/
 │   ├── raw_documents/
-│   │
 │   │   ├── truck_84/
 │   │   │   ├── registration.pdf
 │   │   │   ├── title.pdf
@@ -90,3 +89,26 @@ fleet-document-intelligence/
     ├── architecture.md
     ├── schema.md
     └── demo_queries.md
+```
+
+### Folder Purpose
+
+* **backend/**: Contains the Flask/FastAPI backend, database models, ingestion pipeline, RAG logic, graph logic, agents, and API routes.
+* **frontend/**: Contains the React dashboard, truck views, upload interface, AI chat panel, graph view, and API service calls.
+* **data/**: Stores raw synthetic trucking documents, processed text, extracted metadata, embeddings, and data generation scripts.
+* **vector_db/**: Stores the local Chroma vector database used for document retrieval.
+* **knowledge_graph/**: Stores graph data linking trucks, drivers, trailers, vendors, documents, and expenses.
+* **docs/**: Contains architecture notes, database schema documentation, and demo questions for testing the system.
+
+### Main System Flow
+
+1. Documents are uploaded or generated inside `data/raw_documents/`.
+2. The backend ingestion pipeline reads documents using `document_loader.py`.
+3. OCR is handled by `ocr_processor.py`.
+4. Important fields are extracted using `metadata_extractor.py`.
+5. Documents are linked to trucks, drivers, trailers, and vendors using `entity_linker.py`.
+6. Structured records are stored in the database.
+7. Document text is embedded and stored in the vector database.
+8. The knowledge graph connects related entities.
+9. The AI agent routes user questions to SQL, document retrieval, or hybrid reasoning.
+10. The frontend displays the dashboard, documents, graph relationships, and AI answers with evidence.
