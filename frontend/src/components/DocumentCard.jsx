@@ -1,4 +1,6 @@
 // DocumentCard.jsx
+import React from "react";
+
 export default function DocumentCard({ doc, colors = {} }) {
   const c = colors[doc.doc_type] || { bg: "#F1EFE8", color: "#5F5E5A" };
   const isExpiringSoon = doc.expiry_date && (

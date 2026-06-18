@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { getTrucks, getTruckDocuments } from "../services/api";
 import ChatPanel from "../components/ChatPanel";
 import DocumentCard from "../components/DocumentCard";

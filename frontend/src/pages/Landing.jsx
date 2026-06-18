@@ -1,3 +1,4 @@
+import React from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import truckModelUrl from "../assets/truck/truck.glb?url";

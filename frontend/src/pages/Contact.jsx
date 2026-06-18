@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function Contact() {
   const [form, setForm]       = useState({ name: "", email: "", subject: "", message: "" });

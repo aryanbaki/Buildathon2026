@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getFleetStats, getTrucks } from "../services/api.js";
 import UploadZone from "../components/UploadZone.jsx";

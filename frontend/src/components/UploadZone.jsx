@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { uploadDocument } from "../services/api";
 
 const ACCEPT = ".pdf,.jpg,.jpeg,.png,.docx,.txt,.csv";

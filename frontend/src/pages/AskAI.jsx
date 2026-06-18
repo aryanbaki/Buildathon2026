@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { getTrucks } from "../services/api";
 import { useEffect } from "react";
 import ChatPanel from "../components/ChatPanel";
