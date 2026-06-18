@@ -1,0 +1,18 @@
+# Environment
+.env
+.venv/
+__pycache__/
+*.py[cod]
+
+# Local runtime data
+data/raw_documents/
+data/processed/
+vector_db/
+
+# Logs
+*.log
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
