@@ -142,25 +142,37 @@ def query(text: str, n: int = 5, truck_id: str = None) -> list[dict]:
 ### Prerequisites
 - Python 3.11+
 - Node 18+
-- PostgreSQL 15+
-- Tesseract OCR (`brew install tesseract` / `apt install tesseract-ocr`)
+- Docker Desktop (for Postgres)
+- Tesseract OCR (`brew install tesseract` / `apt install tesseract-ocr`) — only needed for PDF/image uploads
 
-### Backend
+### Backend (from repo root)
+
 ```bash
 git clone https://github.com/aryanbaki/Buildathon2026.git
-cd Buildathon2026/backend
+cd Buildathon2026
 
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+# macOS/Linux: source .venv/bin/activate
+pip install -r backend/requirements.txt
 
 cp .env.example .env
-# Add ANTHROPIC_API_KEY and DATABASE_URL to .env
+# Edit .env: add ANTHROPIC_API_KEY (optional — demo mode works without it)
+# DATABASE_URL defaults to Docker Postgres on port 5433
 
-python -m database.db        # creates tables
-python -m database.seed_data # seeds 15+ documents
-
-uvicorn app:app --reload --port 8000
+docker compose up -d
+python data/synthetic_data_generator/generate_documents.py
+python -m backend.scripts.bootstrap_fleet_data
+uvicorn backend.app:app --reload --port 8000
 ```
+
+Check everything is wired:
+
+```bash
+curl http://localhost:8000/health
+```
+
+Expected: `"db": true`, `"demo_mode": true` (until you add a real `ANTHROPIC_API_KEY`).
 
 ### Frontend
 ```bash
@@ -174,12 +186,13 @@ VITE_MOCK_API=true npm run dev
 VITE_API_URL=http://localhost:8000 npm run dev
 ```
 
-### Generate synthetic data
+### Generate synthetic data only
+
+If you already ran the bootstrap above, skip this. To regenerate docs:
+
 ```bash
-cd data/synthetic_data_generator
-python generate_trucks.py
-python generate_drivers.py
-python generate_documents.py   # creates PDFs in data/raw_documents/
+python data/synthetic_data_generator/generate_documents.py   # → data/raw_documents/
+python -m backend.scripts.bootstrap_fleet_data               # → Postgres + Chroma
 ```
 
 ---
@@ -200,11 +213,14 @@ python generate_documents.py   # creates PDFs in data/raw_documents/
 ## Environment variables
 
 ```env
-ANTHROPIC_API_KEY=sk-ant-...
-DATABASE_URL=postgresql://fleet_user:fleet_pass@localhost:5432/fleet_docs
+ANTHROPIC_API_KEY=sk-ant-...          # optional for demo; required for full Claude routing
+DATABASE_URL=postgresql://fleet_user:fleet_pass@localhost:5433/fleet_docs
 CHROMA_PERSIST_PATH=./vector_db/chroma
 EXTRACTION_MODEL=claude-haiku-4-5-20251001
 ROUTING_MODEL=claude-sonnet-4-6
+DEMO_MODE=false                       # auto-on when ANTHROPIC_API_KEY is missing/placeholder
+TAVILY_API_KEY=tvly-...               # optional; powers web search queries
+CONFIDENCE_THRESHOLD=0.65
 ```
 
 ---
