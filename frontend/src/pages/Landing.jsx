@@ -1,6 +1,6 @@
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
-import truckModelUrl from "../assets/truck/truck.glb";
+import truckModelUrl from "../assets/truck/truck.glb?url";
 import truckPreviewUrl from "../assets/truck/truck-preview.png";
 
 const features = [
