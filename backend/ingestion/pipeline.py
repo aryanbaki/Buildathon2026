@@ -3,10 +3,11 @@ Charan - pipeline.py
 End-to-end document ingestion for the DB pipelines workstream.
 
 Flow:
-1. Load document text from disk or uploaded bytes.
-2. Extract structured metadata.
-3. Link metadata to truck, driver, and trailer rows.
-4. Store the document and any structured records in PostgreSQL.
+1. Store uploaded files or load existing files from disk.
+2. Extract document text.
+3. Extract structured metadata.
+4. Link metadata to truck, driver, and trailer rows.
+5. Store the document and any structured records in PostgreSQL.
 """
 from collections.abc import Callable
 from datetime import date
@@ -15,8 +16,9 @@ from uuid import uuid4
 from sqlalchemy.orm import Session
 
 from backend.database.models import DocType, Document, FuelRecord, MaintenanceRecord
-from backend.ingestion.document_loader import load_document, load_from_bytes
+from backend.ingestion.document_loader import load_document
 from backend.ingestion.entity_linker import link_entities
+from backend.ingestion.storage import save_upload_file
 
 MetadataExtractor = Callable[[str], dict]
 
@@ -48,16 +50,17 @@ def ingest_document_bytes(
     db: Session,
     metadata_extractor: MetadataExtractor | None = None,
     truck_id_override: str | None = None,
+    upload_dir: str | None = None,
 ) -> Document:
     """
-    Ingest an uploaded document from in-memory bytes.
+    Persist an uploaded document, then ingest it through the same disk pipeline.
 
-    Useful for the API upload route because it avoids duplicating pipeline
-    logic outside Charan's ingestion layer.
+    Storing the original upload first gives operators an auditable source file
+    path for every database row.
     """
-    loaded = load_from_bytes(filename, content)
-    return ingest_loaded_document(
-        loaded,
+    stored_path = save_upload_file(filename, content, upload_dir=upload_dir)
+    return ingest_document(
+        str(stored_path),
         db,
         metadata_extractor=metadata_extractor,
         truck_id_override=truck_id_override,
@@ -116,7 +119,7 @@ def ingest_loaded_document(
 
 
 def _default_metadata_extractor(raw_text: str) -> dict:
-    """Lazy-load Claude extraction so smoke tests can inject a mock parser."""
+    """Lazy-load Claude extraction so callers can inject another parser."""
     from backend.ingestion.metadata_extractor import extract_metadata
 
     return extract_metadata(raw_text)
