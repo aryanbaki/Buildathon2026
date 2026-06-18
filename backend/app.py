@@ -30,4 +30,13 @@ app.include_router(router)
 @app.get("/health")
 def health():
     from backend.database.db import health_check
-    return {"status": "ok", "db": health_check()}
+    from backend.auth_status import verify_anthropic_key, tavily_configured, use_demo_mode
+
+    anthropic = verify_anthropic_key()
+    return {
+        "status": "ok" if health_check() else "degraded",
+        "db": health_check(),
+        "anthropic": anthropic,
+        "tavily": {"ok": tavily_configured()},
+        "demo_mode": use_demo_mode(),
+    }

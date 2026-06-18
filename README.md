@@ -245,25 +245,34 @@ The assistant should only answer from retrieved documents or structured database
 
 * Python 3.11+
 * Node 18+
-* PostgreSQL 15+
-* Tesseract OCR (`brew install tesseract` / `apt install tesseract-ocr`)
+* Docker Desktop for Postgres
+* Tesseract OCR (`brew install tesseract` / `apt install tesseract-ocr`) — only needed for PDF/image uploads
 
-### Backend
+### Backend with Docker
 
 ```bash
 git clone https://github.com/aryanbaki/Buildathon2026.git
-cd Buildathon2026/backend
+cd Buildathon2026
 
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+python -m venv .venv
+source .venv/bin/activate
+pip install -r backend/requirements.txt
 
 cp .env.example .env
-# Add ANTHROPIC_API_KEY and DATABASE_URL to .env
+# Optional for full AI mode: add ANTHROPIC_API_KEY and TAVILY_API_KEY.
+# Demo mode works without Claude; Docker Postgres uses localhost:5433.
 
-python -m database.db        # creates tables
-python -m database.seed_data # seeds fleet documents
+docker compose up -d
+python data/synthetic_data_generator/generate_documents.py
+python -m backend.scripts.bootstrap_fleet_data
 
-uvicorn app:app --reload --port 8000
+uvicorn backend.app:app --reload --port 8000
+```
+
+Check wiring:
+
+```bash
+curl http://localhost:8000/health
 ```
 
 ### Frontend
@@ -279,14 +288,13 @@ VITE_MOCK_API=true npm run dev
 VITE_API_URL=http://localhost:8000 npm run dev
 ```
 
-### Generate synthetic data
+### Regenerate synthetic data only
+
+If you already ran the backend bootstrap above, skip this. To regenerate demo documents:
 
 ```bash
-cd data/synthetic_data_generator
-python generate_trucks.py
-python generate_drivers.py
-python generate_trailers.py
-python generate_documents.py   # creates PDFs in data/raw_documents/
+python data/synthetic_data_generator/generate_documents.py
+python -m backend.scripts.bootstrap_fleet_data
 ```
 
 ---
@@ -308,11 +316,14 @@ python generate_documents.py   # creates PDFs in data/raw_documents/
 ## Environment variables
 
 ```env
-ANTHROPIC_API_KEY=sk-ant-...
-DATABASE_URL=postgresql://fleet_user:fleet_pass@localhost:5432/fleet_docs
+ANTHROPIC_API_KEY=sk-ant-...          # optional for demo; required for full Claude routing
+DATABASE_URL=postgresql://fleet_user:fleet_pass@localhost:5433/fleet_docs
 CHROMA_PERSIST_PATH=./vector_db/chroma
 EXTRACTION_MODEL=claude-haiku-4-5-20251001
 ROUTING_MODEL=claude-sonnet-4-6
+DEMO_MODE=false                       # auto-on when ANTHROPIC_API_KEY is missing/placeholder
+TAVILY_API_KEY=tvly-...               # optional; powers web search queries
+CONFIDENCE_THRESHOLD=0.65
 ```
 
 ---
