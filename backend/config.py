@@ -18,6 +18,12 @@ class Settings(BaseSettings):
     routing_model: str = "claude-sonnet-4-6"
     embedding_model: str = "all-MiniLM-L6-v2"
 
+    # External search
+    tavily_api_key: str = ""
+
+    # RAG grounding — reject low-confidence retrievals to avoid hallucinations
+    confidence_threshold: float = 0.65
+
     # App
     app_name: str = "Fleet Document Intelligence"
     debug: bool = False

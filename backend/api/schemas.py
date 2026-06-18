@@ -9,12 +9,14 @@ from typing import Optional
 class AskRequest(BaseModel):
     question: str
     truck_id: Optional[str] = None
+    trailer_id: Optional[str] = None
 
 
 class Source(BaseModel):
     doc_id: str
     filename: str
     truck_id: str
+    trailer_id: Optional[str] = None
     snippet: str
     score: float
 

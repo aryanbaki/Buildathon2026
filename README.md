@@ -61,8 +61,9 @@ This branch includes the current working pieces needed to test Aryan's section w
 * **Yesh frontend from `origin/main`**: Vite/React app shell, dashboard, truck view, Ask AI page, chat panel, upload component, and API client.
 * **Charan backend pipeline from `origin/charan-branch`**: persisted upload storage, batch ingestion, end-to-end document ingestion, and the API upload path that feeds Aryan's vector store.
 * **Aryan RAG + graph from `aryan_branch`**: chunking, metadata-aware Chroma storage, truck/trailer-aware retrieval, confidence filtering, and graph relationship helpers.
+* **Teja agent layer from `origin/teja_branch`**: trailer-aware routing, SQL/RAG/hybrid delegation, hallucination guardrails, profitability query guidance, and optional Tavily web lookups for recalls, DOT/FMCSA rules, and fuel prices.
 
-Teja's current branch contains a gaps/fixes tracker document, not a replacement implementation for the agent/API layer, so this branch keeps the existing agent contract.
+This branch keeps Charan's ingestion pipeline as the upload source of truth and wires Teja's agent layer on top of Aryan's RAG retrieval contract.
 
 ---
 
@@ -99,7 +100,9 @@ fleet-document-intelligence/
 │   │   ├── query_router.py             # Teja — SQL · RAG · hybrid classifier
 │   │   ├── sql_agent.py                # Teja
 │   │   ├── document_agent.py           # Teja
-│   │   └── hybrid_agent.py             # Teja
+│   │   ├── hybrid_agent.py             # Teja
+│   │   ├── grounding.py                # Teja — hallucination guardrails
+│   │   └── web_agent.py                # Teja — Tavily public search
 │   └── api/
 │       ├── routes.py                   # Teja — POST /ask, POST /upload
 │       └── schemas.py                  # Teja — shared request/response types
@@ -137,14 +140,14 @@ fleet-document-intelligence/
 ### `POST /ask`
 
 ```json
-Request:  { "question": "string", "truck_id": "truck_84 | null" }
+Request:  { "question": "string", "truck_id": "truck_84 | null", "trailer_id": "trailer_01 | null" }
 Response: {
   "answer": "string",
-  "query_type": "sql | rag | hybrid",
+  "query_type": "sql | rag | hybrid | web",
   "sql_query": "string | null",
   "sources": [
     { "doc_id": "string", "filename": "string", "truck_id": "string",
-      "snippet": "string", "score": 0.97 }
+      "trailer_id": "string | null", "snippet": "string", "score": 0.97 }
   ]
 }
 ```
@@ -179,6 +182,16 @@ The RAG layer is responsible for turning messy fleet documents into searchable, 
 * `graph_queries.py` provides graph helpers for truck, trailer, vendor, and document relationship questions.
 
 Charan's upload pipeline now passes `trailer_id`, `source_path`, and extraction confidence into Aryan's embedding layer, so uploaded truck documents become searchable with the right fleet metadata.
+
+### What Aryan changed
+
+* Added trailer-aware RAG metadata so document chunks can be filtered by `truck_id`, `driver_id`, `trailer_id`, and `doc_type`.
+* Added truck ID normalization so formats like `84`, `truck_84`, `TRUCK-84`, `TRK-084`, and `T-84` resolve to the same truck filter.
+* Added retrieval confidence filtering so weak matches return no evidence instead of feeding hallucinated answers.
+* Added citation-ready fields to retrieval results: document ID, filename, truck ID, trailer ID, source path, source page, chunk index, and score.
+* Expanded the knowledge graph so it includes trucks, drivers, trailers, documents, vendors, maintenance records, and fuel records.
+* Added graph query helpers for truck subgraphs, vendor lookup, trailer relationships, document lookup by entity, and compact relationship context for hybrid answers.
+* Preserved Teja's `retriever.query(text, n, truck_id)` handoff signature while adding `query_with_filters(...)` for trailer-aware and document-type-aware searches.
 
 ---
 

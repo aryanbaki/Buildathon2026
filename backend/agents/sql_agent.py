@@ -17,7 +17,8 @@ SCHEMA = """
 Tables:
 - trucks(id, unit_number, make, model, year, license_plate, state, status, purchase_date, purchase_price, odometer)
 - drivers(id, name, cdl_number, cdl_expiry, phone, email, hire_date, status)
-- documents(id, truck_id, driver_id, doc_type, filename, doc_date, expiry_date, amount, vendor, confidence_score)
+- trailers(id, unit_number, trailer_type, capacity_tons, license_plate, state, status)
+- documents(id, truck_id, driver_id, trailer_id, doc_type, filename, doc_date, expiry_date, amount, vendor, confidence_score)
 - maintenance_records(id, truck_id, service_date, service_type, vendor, parts_cost, labor_cost, total_cost, odometer_at_service, next_service_date)
 - fuel_records(id, truck_id, fill_date, gallons, price_per_gallon, total_cost, location, odometer)
 - driver_assignments(id, truck_id, driver_id, start_date, end_date, is_primary)
@@ -31,6 +32,37 @@ Rules:
 - For "last month" use: EXTRACT(MONTH FROM date_col) = EXTRACT(MONTH FROM CURRENT_DATE - INTERVAL '1 month')
 - For "expiring soon" use: expiry_date BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '30 days'
 - Always JOIN trucks ON trucks.id = <table>.truck_id when showing truck info.
+- For trailer questions, JOIN trailers ON trailers.id = documents.trailer_id.
+
+Profitability / cost aggregation (this quarter):
+- Operating cost per truck = COALESCE(SUM(maintenance_records.total_cost), 0) + COALESCE(SUM(fuel_records.total_cost), 0)
+- Revenue proxy: SUM(documents.amount) WHERE doc_type IN ('other', 'tax_form') AND amount IS NOT NULL (load/trip summaries)
+- Net = revenue - operating cost. Group by truck_id, filter service_date/fill_date/doc_date to current quarter.
+- Example pattern:
+  WITH costs AS (
+    SELECT truck_id,
+           COALESCE((SELECT SUM(total_cost) FROM maintenance_records m
+                     WHERE m.truck_id = t.id
+                       AND EXTRACT(QUARTER FROM m.service_date) = EXTRACT(QUARTER FROM CURRENT_DATE)
+                       AND EXTRACT(YEAR FROM m.service_date) = EXTRACT(YEAR FROM CURRENT_DATE)), 0)
+         + COALESCE((SELECT SUM(total_cost) FROM fuel_records f
+                     WHERE f.truck_id = t.id
+                       AND EXTRACT(QUARTER FROM f.fill_date) = EXTRACT(QUARTER FROM CURRENT_DATE)
+                       AND EXTRACT(YEAR FROM f.fill_date) = EXTRACT(YEAR FROM CURRENT_DATE)), 0) AS operating_cost
+    FROM trucks t
+  ),
+  revenue AS (
+    SELECT truck_id, COALESCE(SUM(amount), 0) AS trip_revenue
+    FROM documents
+    WHERE amount IS NOT NULL
+      AND EXTRACT(QUARTER FROM doc_date) = EXTRACT(QUARTER FROM CURRENT_DATE)
+      AND EXTRACT(YEAR FROM doc_date) = EXTRACT(YEAR FROM CURRENT_DATE)
+    GROUP BY truck_id
+  )
+  SELECT trucks.unit_number, COALESCE(revenue.trip_revenue, 0) - costs.operating_cost AS net_profit
+  FROM trucks JOIN costs ON costs.truck_id = trucks.id
+  LEFT JOIN revenue ON revenue.truck_id = trucks.id
+  ORDER BY net_profit DESC LIMIT 1;
 """
 
 SQL_PROMPT = f"""You are a PostgreSQL expert for a fleet management system.

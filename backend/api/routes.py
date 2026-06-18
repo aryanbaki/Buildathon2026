@@ -22,7 +22,7 @@ async def ask(req: AskRequest):
     """Main AI query endpoint — routes to SQL, RAG, or hybrid agent."""
     if not req.question.strip():
         raise HTTPException(status_code=400, detail="Question cannot be empty.")
-    result = route(req.question, req.truck_id)
+    result = route(req.question, req.truck_id, req.trailer_id)
     return AskResponse(**result)
 
 
