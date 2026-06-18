@@ -54,6 +54,18 @@ Aryan's branch focuses on the RAG/retrieval contract: retrieve the right source 
 
 ---
 
+## Integrated branch status
+
+This branch includes the current working pieces needed to test Aryan's section with the rest of the app:
+
+* **Yesh frontend from `origin/main`**: Vite/React app shell, dashboard, truck view, Ask AI page, chat panel, upload component, and API client.
+* **Charan backend pipeline from `origin/charan-branch`**: persisted upload storage, batch ingestion, end-to-end document ingestion, and the API upload path that feeds Aryan's vector store.
+* **Aryan RAG + graph from `aryan_branch`**: chunking, metadata-aware Chroma storage, truck/trailer-aware retrieval, confidence filtering, and graph relationship helpers.
+
+Teja's current branch contains a gaps/fixes tracker document, not a replacement implementation for the agent/API layer, so this branch keeps the existing agent contract.
+
+---
+
 ## Repo structure
 
 ```text
@@ -63,10 +75,13 @@ fleet-document-intelligence/
 │   ├── config.py                       # shared config
 │   ├── requirements.txt
 │   ├── ingestion/
+│   │   ├── storage.py                  # Charan — persists original uploads
 │   │   ├── document_loader.py          # Charan
 │   │   ├── ocr_processor.py            # Charan
 │   │   ├── metadata_extractor.py       # Charan — Claude Haiku extraction
-│   │   └── entity_linker.py            # Charan — links doc to truck/driver/trailer
+│   │   ├── entity_linker.py            # Charan — links doc to truck/driver/trailer
+│   │   ├── pipeline.py                 # Charan — upload/folder ingest to SQL
+│   │   └── batch_ingest.py             # Charan — folder backfill utility
 │   ├── database/
 │   │   ├── models.py                   # Charan — SQLAlchemy schema
 │   │   ├── db.py                       # Charan — session management
@@ -89,16 +104,22 @@ fleet-document-intelligence/
 │       ├── routes.py                   # Teja — POST /ask, POST /upload
 │       └── schemas.py                  # Teja — shared request/response types
 ├── frontend/
+│   ├── index.html                      # Yesh — Vite entry document
+│   ├── package.json                    # Yesh — frontend scripts/deps
+│   ├── vite.config.js                  # Yesh — Vite config
 │   └── src/
+│       ├── App.jsx                     # Yesh — routes/app shell
+│       ├── main.jsx                    # Yesh — React mount
+│       ├── index.css                   # Yesh — shared UI styles
 │       ├── pages/
 │       │   ├── Dashboard.jsx           # Yesh
 │       │   ├── TruckView.jsx           # Yesh
 │       │   └── AskAI.jsx               # Yesh
 │       ├── components/
+│       │   ├── Sidebar.jsx             # Yesh
 │       │   ├── ChatPanel.jsx           # Yesh
 │       │   ├── UploadZone.jsx          # Yesh
-│       │   ├── DocumentCard.jsx        # Yesh
-│       │   └── GraphView.jsx           # Yesh (uses Aryan's graph data)
+│       │   └── DocumentCard.jsx        # Yesh
 │       └── services/
 │           └── api.js                  # Yesh — mock + real API calls
 └── data/
@@ -156,6 +177,8 @@ The RAG layer is responsible for turning messy fleet documents into searchable, 
 * `retriever.py` performs semantic search, applies optional fleet filters, enforces a confidence floor, and returns source-ready chunks.
 * `graph_builder.py` exports a truck/driver/trailer/document/vendor graph for relationship retrieval.
 * `graph_queries.py` provides graph helpers for truck, trailer, vendor, and document relationship questions.
+
+Charan's upload pipeline now passes `trailer_id`, `source_path`, and extraction confidence into Aryan's embedding layer, so uploaded truck documents become searchable with the right fleet metadata.
 
 ---
 

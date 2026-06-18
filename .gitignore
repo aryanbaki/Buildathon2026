@@ -1,0 +1,23 @@
+# Environment
+.env
+.venv/
+__pycache__/
+*.py[cod]
+
+# Frontend dependencies/build output
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# Local runtime data
+data/raw_documents/
+data/processed/
+vector_db/
+
+# Logs
+*.log
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
