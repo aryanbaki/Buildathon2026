@@ -3,14 +3,15 @@ Teja — query_router.py
 Uses Claude Sonnet to classify the user's question into sql | rag | hybrid | web,
 then delegates to the correct agent. Returns a unified response dict.
 
-This is the core of the system — every /ask request goes through here.
+Falls back to demo_agents when ANTHROPIC_API_KEY is missing/invalid.
 """
 import re
 import anthropic
 from backend.config import get_settings
+from backend.auth_status import use_demo_mode, verify_anthropic_key
 
 settings = get_settings()
-client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
+client = anthropic.Anthropic(api_key=settings.anthropic_api_key) if settings.anthropic_api_key else None
 
 _WEB_HINT = re.compile(
     r"\b(recall|nhtsa|fmcsa|dot regulation|diesel price|fuel price|compliance rule)\b",
@@ -58,6 +59,10 @@ def route(question: str, truck_id: str = None, trailer_id: str = None) -> dict:
       "sources": list[dict],
     }
     """
+    if use_demo_mode():
+        from backend.agents import demo_agents
+        return demo_agents.route(question, truck_id, trailer_id)
+
     import json
 
     # Fast path for obvious external lookups

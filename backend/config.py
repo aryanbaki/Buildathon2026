@@ -4,7 +4,7 @@ from functools import lru_cache
 
 class Settings(BaseSettings):
     # Anthropic
-    anthropic_api_key: str
+    anthropic_api_key: str = ""
 
     # PostgreSQL
     database_url: str = "postgresql://fleet_user:fleet_pass@localhost:5432/fleet_docs"
@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     # App
     app_name: str = "Fleet Document Intelligence"
     debug: bool = False
+    demo_mode: bool = False          # force rule-based agents (no Claude)
     upload_dir: str = "./data/raw_documents"
     processed_dir: str = "./data/processed"
 
