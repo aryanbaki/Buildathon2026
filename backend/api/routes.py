@@ -24,7 +24,7 @@ async def ask(req: AskRequest):
     """Main AI query endpoint — routes to SQL, RAG, or hybrid agent."""
     if not req.question.strip():
         raise HTTPException(status_code=400, detail="Question cannot be empty.")
-    result = route(req.question, req.truck_id)
+    result = route(req.question, req.truck_id, req.trailer_id)
     return AskResponse(**result)
 
 
@@ -84,8 +84,11 @@ async def upload(
         raw_text=loaded["raw_text"],
         truck_id=entities["truck_id"],
         driver_id=entities["driver_id"],
+        trailer_id=entities["trailer_id"],
         doc_type=doc_type_str,
         filename=file.filename,
+        source_path=loaded.get("file_path"),
+        confidence_score=meta.get("confidence"),
     )
     doc.chroma_doc_id = chroma_ids[0] if chroma_ids else None
 
