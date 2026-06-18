@@ -1,5 +1,7 @@
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import truckModelUrl from "../assets/truck/truck.glb";
+import truckPreviewUrl from "../assets/truck/truck-preview.png";
 
 const features = [
   ["Document intake", "Upload PDFs, scans, receipts, forms, and CSVs into one fleet workspace."],
@@ -51,9 +53,17 @@ export default function Landing() {
           </div>
         </div>
         <div className="hero-visual" aria-label="Fleet operations dashboard preview">
-          <div className="truck-line">
-            <span className="truck-cab" />
-            <span className="truck-trailer" />
+          <div className="truck-asset-stage">
+            <div className="truck-asset-glow" />
+            <img
+              src={truckPreviewUrl}
+              alt="Low-poly 3D truck model preview"
+              className="truck-asset-preview"
+              loading="eager"
+            />
+            <a className="model-chip" href={truckModelUrl} download>
+              CC0 GLB model included
+            </a>
           </div>
           <div className="preview-card preview-main">
             <div>
