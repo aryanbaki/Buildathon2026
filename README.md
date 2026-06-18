@@ -43,14 +43,21 @@ The graph module is intentional, not extra scope. It builds a lightweight knowle
 
 ---
 
-## Team
+## Team contributions
 
-| Person | Role | Owns |
-|--------|------|------|
-| **Yesh** | Frontend | `frontend/` · `synthetic_data_generator/` |
-| **Charan** | DB Pipelines | `ingestion/` · `database/` |
-| **Aryan** | RAG + Graph | `rag/` · `graph/` |
-| **Teja** | AI Agents | `agents/` · `api/` · `app.py` |
+| Person | Project section | What they built |
+|--------|-----------------|-----------------|
+| **Yesh** | Frontend experience | Built the React/Vite app shell, routing, public FleetMind AI landing flow, sign-in experience, dashboard views, truck view, Ask AI screen, upload UI, reusable visual components, and the API client used by the frontend. |
+| **Charan** | Ingestion + database | Built the PostgreSQL/SQLAlchemy schema, document loader, OCR path, metadata extraction hooks, entity linker, upload storage, batch ingestion pipeline, seed/bootstrap data flow, and persisted records for trucks, drivers, trailers, documents, maintenance, and fuel. |
+| **Aryan** | RAG + knowledge graph | Built the RAG retrieval layer, ChromaDB embedding/chunking flow, metadata-aware vector store, truck/driver/trailer filters, confidence thresholding, source-ready retrieval results, and graph helpers for truck-driver-trailer-document relationships. |
+| **Teja** | AI agents + API | Built the FastAPI entrypoint and routes, SQL/RAG/hybrid/web query router, SQL agent, document agent, hybrid answer path, hallucination guardrails, Tavily-backed public search hooks, demo-mode agents, and health/credential checks. |
+
+### Section ownership details
+
+* **Frontend and product polish:** Yesh's frontend work is the visible operator experience. The final FleetMind AI interface keeps the existing dashboard/tools, adds the public landing page first, protects app routes behind sign-in, and uses the dark trucking SaaS theme.
+* **Document ingestion and structured records:** Charan's pipeline turns uploads or generated files into stored source documents and structured database rows that the dashboard, SQL agent, and RAG layer can use.
+* **Retrieval and graph intelligence:** Aryan's section makes fleet documents searchable with citations, normalizes truck and trailer metadata, rejects weak retrieval matches, and exposes relationship context through the knowledge graph.
+* **Agent orchestration and backend API:** Teja's agent/API layer decides whether a question should use SQL, document retrieval, hybrid reasoning, or web context, then returns a unified response for the frontend.
 
 Aryan's branch focuses on the RAG/retrieval contract: retrieve the right source documents, preserve citations, support truck/driver/trailer filters, expose graph relationships, and return "I don't know based on the uploaded documents" when the evidence is missing.
 
