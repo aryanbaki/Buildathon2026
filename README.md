@@ -1,10 +1,6 @@
 # Buildathon2026
-
-
-
 ## Folder Structure
-
-```text
+text
 fleet-document-intelligence/
 │
 ├── backend/
@@ -94,9 +90,3 @@ fleet-document-intelligence/
     ├── architecture.md
     ├── schema.md
     └── demo_queries.md
-```
-
----
-
-
-Build a reliable AI system that transforms unstructured fleet documents into actionable operational intelligence while ensuring every answer is grounded in real data and source documents.
