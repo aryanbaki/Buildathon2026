@@ -63,13 +63,16 @@ Charan owns the core ingest pipeline and relational database layer for Statement
 
 | Area | Files | Purpose |
 |------|-------|---------|
+| Upload storage | `backend/ingestion/storage.py` | Persist original uploaded documents under `data/raw_documents/` before extraction. |
 | Document ingest | `backend/ingestion/document_loader.py` | Load fleet PDFs, images, CSVs, and scanned files into a normalized document pipeline. |
 | OCR processing | `backend/ingestion/ocr_processor.py` | Extract searchable text from messy scans, photos, receipts, registrations, and tax forms. |
 | Metadata extraction | `backend/ingestion/metadata_extractor.py` | Pull document type, dates, costs, VINs, plate numbers, truck IDs, driver names, trailer IDs, and vendor details. |
 | Entity linking | `backend/ingestion/entity_linker.py` | Link each document to the correct truck, driver, and trailer before storage or retrieval. |
+| End-to-end pipeline | `backend/ingestion/pipeline.py` | Store uploads, extract text and metadata, link entities, and insert SQL rows for documents, maintenance, and fuel. |
+| Batch backfill | `backend/ingestion/batch_ingest.py` | Ingest a folder of existing fleet files while collecting per-file errors. |
 | Database schema | `backend/database/models.py` | Define SQLAlchemy models for fleet entities, document metadata, costs, renewals, and maintenance records. |
 | Database session | `backend/database/db.py` | Manage database connections, sessions, and table creation for the backend. |
-| Seed data | `backend/database/seed_data.py` | Create realistic synthetic fleet records and 15+ messy sample documents for testing SQL, RAG, and hybrid queries. |
+| Seed data | `backend/database/seed_data.py` | Create realistic synthetic fleet records and 15+ messy sample documents for SQL, RAG, and hybrid queries. |
 
 Blocks: `TM1`, `TM3`, `TM4`. Status: `start first`, `core`.
 
@@ -84,10 +87,13 @@ fleet-document-intelligence/
 │   ├── config.py                       # shared config
 │   ├── requirements.txt
 │   ├── ingestion/
+│   │   ├── storage.py                  # Charan — persists original uploads
 │   │   ├── document_loader.py          # Charan
 │   │   ├── ocr_processor.py            # Charan
 │   │   ├── metadata_extractor.py       # Charan — Claude Haiku extraction
-│   │   └── entity_linker.py            # Charan — links doc to truck/driver
+│   │   ├── entity_linker.py            # Charan — links doc to truck/driver
+│   │   ├── pipeline.py                 # Charan — upload/folder ingest to SQL
+│   │   └── batch_ingest.py             # Charan — folder backfill utility
 │   ├── database/
 │   │   ├── models.py                   # Charan — SQLAlchemy schema
 │   │   ├── db.py                       # Charan — session management
