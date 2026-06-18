@@ -1,88 +1,124 @@
+import { Link } from "react-router-dom";
+
 const TEAM = [
-  { name: "Yesh Salapu",  role: "Frontend Engineer",     avatar: "YS", color: "#1A1A2E", bio: "CS grad, UNT 2026. Built the full React UI, routing, and component system." },
-  { name: "Charan",       role: "Database Engineer",      avatar: "CH", color: "#16A34A", bio: "Owns the PostgreSQL schema, OCR ingest pipeline, and synthetic data generation." },
-  { name: "Aryan",        role: "RAG & ML Engineer",      avatar: "AR", color: "#F4A622", bio: "Built the ChromaDB vector store, embedding pipeline, and knowledge graph." },
-  { name: "Teja",         role: "AI Agent Engineer",      avatar: "TE", color: "#7C3AED", bio: "Designed the query router, SQL agent, document agent, and FastAPI backend." },
+  ["Yesh Salapu", "Frontend Engineer", "React UI, routing, dashboard surfaces, and component polish."],
+  ["Charan", "Database Engineer", "PostgreSQL schema, OCR ingestion pipeline, upload storage, and seed data."],
+  ["Aryan", "RAG & Graph Engineer", "ChromaDB retrieval, metadata filters, trailer-aware RAG, and knowledge graph helpers."],
+  ["Teja", "AI Agent Engineer", "Query routing, SQL/document/hybrid agents, FastAPI API layer, and demo bootstrap."],
 ];
 
 const STACK = [
-  ["Frontend",    "React 18 + Vite + React Router"],
-  ["Backend",     "FastAPI + Python 3.12"],
-  ["Database",    "PostgreSQL 16 + pgvector"],
-  ["AI Extraction","Claude Haiku (Anthropic)"],
-  ["AI Routing",  "Claude Sonnet (Anthropic)"],
-  ["Web Search",  "Tavily API"],
-  ["Vector Store","ChromaDB + sentence-transformers"],
-  ["OCR",         "OCRmyPDF + Tesseract"],
-  ["Auth",        "JWT + OIDC (Google)"],
-  ["Deployment",  "Docker Compose + Railway"],
+  ["Frontend", "React 18, Vite, React Router"],
+  ["Backend", "FastAPI, Python, Docker Compose"],
+  ["Database", "PostgreSQL, SQLAlchemy"],
+  ["Retrieval", "ChromaDB, sentence-transformers, metadata filters"],
+  ["Documents", "Tesseract OCR, PDF/image/text loaders, synthetic messy fleet docs"],
+  ["Reasoning", "Claude Haiku extraction, Claude Sonnet routing, grounded fallback demo agents"],
+  ["External context", "Tavily for planned recall, DOT/FMCSA, and diesel-price lookups"],
+];
+
+const cards = [
+  ["Problem", "Trucking teams manage high-volume paperwork across receipts, registrations, inspections, tax forms, titles, and maintenance records."],
+  ["Solution", "FleetMind AI links documents to trucks, drivers, trailers, dates, costs, and source snippets so operators can ask questions in plain English."],
+  ["Impact", "Fleet operators, dispatchers, managers, and accounting teams can find the right evidence faster without guessing or digging through files."],
 ];
 
 export default function About() {
   return (
-    <div style={{ padding: "32px 40px", maxWidth: 900 }}>
-      {/* Hero */}
-      <div style={{ marginBottom: 36 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: "#F4A622", letterSpacing: ".12em", textTransform: "uppercase", marginBottom: 6 }}>
-          AI Buildathon Dallas 2026
+    <div className="public-page about-public">
+      <nav className="public-nav">
+        <Link to="/" className="brand-lockup">
+          <span className="brand-mark">FM</span>
+          <span>
+            <strong>FleetMind AI</strong>
+            <small>Project overview</small>
+          </span>
+        </Link>
+        <div className="public-nav-links">
+          <Link to="/">Home</Link>
+          <Link className="btn btn-ghost" to="/login">Sign in</Link>
         </div>
-        <h1 style={{ fontSize: 28, fontWeight: 600, marginBottom: 10 }}>About Fleet Document Intelligence</h1>
-        <p style={{ fontSize: 15, color: "#6B6965", maxWidth: 600, lineHeight: 1.7 }}>
-          Built in 32 hours at AI Buildathon Dallas 2026. Fleet Document Intelligence transforms unstructured trucking paperwork into instant, grounded operational answers — no hallucinations, every answer cites a real source.
-        </p>
-      </div>
+      </nav>
 
-      {/* Problem / Solution */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 36 }}>
-        {[
-          { label: "The problem", icon: "📦", text: "Trucking carriers run on paper. 50+ documents per week — receipts, registrations, tax forms, inspection reports — all unsearchable. Operators spend hours digging through filing cabinets to answer basic questions." },
-          { label: "The solution", icon: "⚡", text: "Ingest every document, link it to the correct truck and driver, and let operators ask anything in plain English. SQL for structured data, RAG for document content, Tavily for live web data — all in one grounded answer." },
-        ].map(({ label, icon, text }) => (
-          <div key={label} style={{ background: "#fff", border: "1px solid #E4E2D9", borderRadius: 14, padding: "20px 24px" }}>
-            <div style={{ fontSize: 24, marginBottom: 10 }}>{icon}</div>
-            <div style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: "#9C9890", marginBottom: 8 }}>{label}</div>
-            <p style={{ fontSize: 14, color: "#6B6965", lineHeight: 1.7 }}>{text}</p>
+      <main className="about-shell">
+        <section className="page-hero public-hero-narrow">
+          <div>
+            <span className="eyebrow">AI Buildathon Dallas 2026</span>
+            <h1>Fleet document intelligence for messy trucking operations.</h1>
+            <p>
+              FleetMind AI is a buildathon MVP for Statement 7: turn unstructured
+              fleet paperwork into searchable, grounded operational intelligence.
+            </p>
           </div>
-        ))}
-      </div>
+        </section>
 
-      {/* Team */}
-      <div style={{ marginBottom: 36 }}>
-        <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 16 }}>The team</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-          {TEAM.map(({ name, role, avatar, color, bio }) => (
-            <div key={name} style={{ background: "#fff", border: "1px solid #E4E2D9", borderRadius: 14, padding: "18px 20px", display: "flex", gap: 14 }}>
-              <div style={{
-                width: 44, height: 44, borderRadius: "50%", background: color,
-                color: "#fff", display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 14, fontWeight: 700, flexShrink: 0,
-              }}>{avatar}</div>
-              <div>
-                <div style={{ fontSize: 14, fontWeight: 600 }}>{name}</div>
-                <div style={{ fontSize: 12, color: "#F4A622", fontWeight: 500, marginBottom: 6 }}>{role}</div>
-                <div style={{ fontSize: 13, color: "#6B6965", lineHeight: 1.6 }}>{bio}</div>
+        <section className="feature-grid">
+          {cards.map(([title, text]) => (
+            <article className="surface-card lift-card" key={title}>
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </article>
+          ))}
+        </section>
+
+        <section className="public-band compact-band">
+          <div className="section-heading">
+            <span className="eyebrow">Who it helps</span>
+            <h2>Operators, dispatchers, fleet managers, and accounting teams.</h2>
+          </div>
+          <p className="wide-copy">
+            The app is designed for people who need quick answers about drivers,
+            trucks, trailers, loads, invoices, PODs, bills of lading, maintenance,
+            tax forms, registrations, and document expirations.
+          </p>
+        </section>
+
+        <section className="public-band compact-band">
+          <div className="section-heading">
+            <span className="eyebrow">Team ownership</span>
+            <h2>Clear workstreams across frontend, ingestion, RAG, and agents.</h2>
+          </div>
+          <div className="team-grid">
+            {TEAM.map(([name, role, work]) => (
+              <article className="team-card" key={name}>
+                <span>{name.split(" ").map((part) => part[0]).join("").slice(0, 2)}</span>
+                <div>
+                  <h3>{name}</h3>
+                  <strong>{role}</strong>
+                  <p>{work}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="public-band compact-band">
+          <div className="section-heading">
+            <span className="eyebrow">Tech stack</span>
+            <h2>The MVP combines structured data, document retrieval, and graph context.</h2>
+          </div>
+          <div className="stack-list">
+            {STACK.map(([layer, tech]) => (
+              <div key={layer}>
+                <span>{layer}</span>
+                <strong>{tech}</strong>
               </div>
-            </div>
-          ))}
-        </div>
-      </div>
+            ))}
+          </div>
+        </section>
 
-      {/* Stack */}
-      <div>
-        <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 16 }}>Tech stack</h2>
-        <div style={{ background: "#fff", border: "1px solid #E4E2D9", borderRadius: 14, overflow: "hidden" }}>
-          {STACK.map(([layer, tech], i) => (
-            <div key={layer} style={{
-              display: "flex", justifyContent: "space-between", alignItems: "center",
-              padding: "12px 20px", fontSize: 13,
-              borderBottom: i < STACK.length - 1 ? "1px solid #E4E2D9" : "none",
-            }}>
-              <span style={{ color: "#9C9890", fontWeight: 500 }}>{layer}</span>
-              <span style={{ fontWeight: 500 }}>{tech}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+        <section className="builder-card">
+          <div>
+            <span className="eyebrow">About the builder</span>
+            <h2>Placeholder builder note</h2>
+            <p>
+              Replace this with your personal buildathon story, role, and what
+              you want judges to know about your RAG/retrieval work.
+            </p>
+          </div>
+          <Link className="btn btn-primary" to="/login">Enter the demo</Link>
+        </section>
+      </main>
     </div>
   );
 }

@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
-import LoginModal from "./components/LoginModal.jsx";
 import Sidebar from "./components/Sidebar.jsx";
+import Landing from "./pages/Landing.jsx";
+import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import AskAI from "./pages/AskAI.jsx";
 import TruckView from "./pages/TruckView.jsx";
@@ -9,27 +10,20 @@ import About from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
 import Settings from "./pages/Settings.jsx";
 
-function AppShell() {
-  const { user, showLogin } = useAuth();
+function ProtectedRoute({ children }) {
+  const { user } = useAuth();
+  if (!user) return <Navigate to="/login" replace />;
+  return children;
+}
+
+function ProtectedShell({ children }) {
   return (
-    <>
-      {showLogin && <LoginModal />}
-      <div style={{ display: "flex", minHeight: "100vh", filter: showLogin ? "blur(3px)" : "none", transition: "filter .2s" }}>
+    <ProtectedRoute>
+      <div className="app-shell">
         <Sidebar />
-        <main style={{ flex: 1, overflowY: "auto", minHeight: "100vh" }}>
-          <Routes>
-            <Route path="/"              element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard"     element={<Dashboard />} />
-            <Route path="/ask"           element={<AskAI />} />
-            <Route path="/trucks"        element={<TruckView />} />
-            <Route path="/trucks/:truckId" element={<TruckView />} />
-            <Route path="/about"         element={<About />} />
-            <Route path="/contact"       element={<Contact />} />
-            <Route path="/settings"      element={<Settings />} />
-          </Routes>
-        </main>
+        <main className="app-main">{children}</main>
       </div>
-    </>
+    </ProtectedRoute>
   );
 }
 
@@ -37,7 +31,18 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <AppShell />
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/about" element={<About isPublic />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<ProtectedShell><Dashboard /></ProtectedShell>} />
+          <Route path="/ask" element={<ProtectedShell><AskAI /></ProtectedShell>} />
+          <Route path="/trucks" element={<ProtectedShell><TruckView /></ProtectedShell>} />
+          <Route path="/trucks/:truckId" element={<ProtectedShell><TruckView /></ProtectedShell>} />
+          <Route path="/contact" element={<ProtectedShell><Contact /></ProtectedShell>} />
+          <Route path="/settings" element={<ProtectedShell><Settings /></ProtectedShell>} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </BrowserRouter>
     </AuthProvider>
   );

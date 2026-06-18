@@ -1,4 +1,4 @@
-# Fleet Document Intelligence
+# FleetMind AI
 > AI Buildathon Dallas 2026 — Statement 7
 
 **Transform unstructured fleet documents into instant, grounded operational intelligence.**
@@ -18,6 +18,8 @@ Trucking carriers run on paper. An active fleet generates 50+ documents every we
 ## The solution
 
 A system that ingests every fleet document, links each one to the correct truck, driver, and trailer, and lets an operator ask any question in plain English — with every answer grounded in a real source document or database row.
+
+FleetMind AI is the public-facing product identity for the demo experience. It presents the same backend and document intelligence capabilities through a polished dark trucking AI SaaS flow: public landing page, public project page, sign-in, then protected operator dashboard.
 
 ---
 
@@ -58,7 +60,7 @@ Aryan's branch focuses on the RAG/retrieval contract: retrieve the right source 
 
 This branch includes the current working pieces needed to test Aryan's section with the rest of the app:
 
-* **Yesh frontend from `origin/main`**: Vite/React app shell, dashboard, truck view, Ask AI page, chat panel, upload component, and API client.
+* **Yesh frontend + FleetMind UI flow**: Vite/React app shell, public landing page, public About page, sign-in route, protected dashboard, truck view, Ask AI page, chat panel, upload component, and API client.
 * **Charan backend pipeline from `origin/charan-branch`**: persisted upload storage, batch ingestion, end-to-end document ingestion, and the API upload path that feeds Aryan's vector store.
 * **Aryan RAG + graph from `aryan_branch`**: chunking, metadata-aware Chroma storage, truck/trailer-aware retrieval, confidence filtering, and graph relationship helpers.
 * **Teja agent layer from `origin/teja_branch`**: trailer-aware routing, SQL/RAG/hybrid delegation, hallucination guardrails, profitability query guidance, and optional Tavily web lookups for recalls, DOT/FMCSA rules, and fuel prices.
@@ -236,6 +238,36 @@ The assistant should only answer from retrieved documents or structured database
 * Answers include citations with document name, page, and relevant snippet whenever possible.
 * Low-confidence retrieval results are treated as missing evidence, not as permission to infer.
 * Structured fields such as `truck_id`, `driver_id`, and `trailer_id` must come from extracted metadata or linked records before they appear in an answer.
+
+---
+
+## Product experience
+
+The app now opens as a public website before showing protected fleet tools:
+
+| Route | Access | Purpose |
+|-------|--------|---------|
+| `/` | Public | FleetMind AI landing page with product positioning, workflow, feature cards, and dashboard preview |
+| `/about` | Public | Buildathon project page covering problem, solution, impact, team roles, and tech stack |
+| `/login` | Public | Demo sign-in flow; successful sign-in stores the local demo user and redirects to `/dashboard` |
+| `/dashboard` | Protected | Existing fleet command dashboard with stats, suggested queries, upload flow, and truck roster |
+| `/ask` | Protected | Existing grounded AI question panel with optional truck filter |
+| `/trucks` and `/trucks/:truckId` | Protected | Existing truck-specific document and chat workflow |
+| `/contact`, `/settings` | Protected | Existing app support/settings pages |
+
+If a visitor tries to open a protected route before signing in, React Router redirects them to `/login`. After sign-in, the existing dashboard, upload, Ask AI, truck view, and API fallback behavior remain intact.
+
+### Public About page content
+
+The public About page explains the same buildathon story that judges need from the README:
+
+* **Problem:** trucking teams manage high-volume, messy paperwork across receipts, registrations, inspections, tax forms, titles, and maintenance records.
+* **Solution:** FleetMind AI links documents to trucks, drivers, trailers, dates, costs, and source snippets so operators can ask questions in plain English.
+* **Impact:** operators, dispatchers, fleet managers, and accounting teams can find evidence faster without guessing or digging through files.
+* **Team roles:** Yesh owns frontend, Charan owns ingestion/database, Aryan owns RAG and graph retrieval, and Teja owns AI agents/API.
+* **Tech stack:** React/Vite, FastAPI, PostgreSQL, SQLAlchemy, ChromaDB, sentence-transformers, Tesseract OCR, Claude Haiku/Sonnet, Tavily, and Docker Compose.
+
+No external design assets are used. The FleetMind mark, truck illustration, and dashboard preview are local React/CSS.
 
 ---
 
