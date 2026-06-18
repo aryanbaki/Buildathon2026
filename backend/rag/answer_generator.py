@@ -16,7 +16,10 @@ If data is missing, say so. Be direct — operators need fast, clear answers."""
 
 def generate_sql_answer(question: str, sql: str, rows: list[dict]) -> str:
     if not rows:
-        return "No records found matching that query."
+        return (
+            "No records found matching that query in the fleet database. "
+            "I won't guess — upload the relevant documents or try a different time range."
+        )
     prompt = f"""Question: {question}
 
 SQL used: {sql}

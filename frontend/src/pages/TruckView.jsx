@@ -32,45 +32,37 @@ export default function TruckView() {
   const selected = trucks.find((t) => t.id === selectedId);
 
   return (
-    <div style={{ maxWidth: 960, margin: "0 auto", padding: "24px 20px" }}>
-      <h1 style={{ fontSize: 22, fontWeight: 500, margin: "0 0 16px" }}>Truck view</h1>
+    <div className="page-wrap">
+      <header className="page-hero">
+        <div>
+          <span className="eyebrow">Truck command view</span>
+          <h1>Truck view</h1>
+          <p>Review truck metadata, linked documents, and truck-scoped AI answers.</p>
+        </div>
+      </header>
 
       {/* Truck selector row */}
-      <div style={{ display: "flex", gap: 10, marginBottom: 20, flexWrap: "wrap" }}>
+      <div className="truck-selector">
         {trucks.map((t) => (
           <button
             key={t.id}
             onClick={() => setSelectedId(t.id)}
-            style={{
-              padding: "8px 16px", borderRadius: 8, fontSize: 14, cursor: "pointer",
-              border: selectedId === t.id ? "1.5px solid #534AB7" : "0.5px solid var(--color-border-tertiary,#e0dfd8)",
-              background: selectedId === t.id ? "#EEEDFE" : "var(--color-background-primary,#fff)",
-              color: selectedId === t.id ? "#534AB7" : "var(--color-text-primary)",
-              fontWeight: selectedId === t.id ? 500 : 400,
-            }}
+            className={selectedId === t.id ? "active" : ""}
           >
             Truck {t.unit_number}
-            <span style={{ fontSize: 11, marginLeft: 6, color: "var(--color-text-secondary)" }}>
-              {t.make}
-            </span>
+            <span>{t.make}</span>
           </button>
         ))}
       </div>
 
       {selected && (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+        <div className="truck-view-grid">
           {/* Left: truck info + docs */}
           <div>
             {/* Truck card */}
-            <div style={{
-              background: "var(--color-background-primary,#fff)",
-              border: "0.5px solid var(--color-border-tertiary,#e0dfd8)",
-              borderRadius: 12, padding: "16px 20px", marginBottom: 16,
-            }}>
-              <div style={{ fontSize: 18, fontWeight: 500, marginBottom: 8 }}>
-                Truck {selected.unit_number}
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 16px", fontSize: 13 }}>
+            <div className="surface-panel truck-info-card">
+              <h2>Truck {selected.unit_number}</h2>
+              <div className="info-grid">
                 {[
                   ["Make", selected.make],
                   ["Model", selected.model],
@@ -78,33 +70,29 @@ export default function TruckView() {
                   ["Status", selected.status],
                 ].map(([k, v]) => (
                   <div key={k}>
-                    <span style={{ color: "var(--color-text-secondary)" }}>{k} </span>
-                    <span style={{ fontWeight: 500 }}>{v}</span>
+                    <span>{k}</span>
+                    <strong>{v}</strong>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Documents */}
-            <div style={{ fontSize: 13, fontWeight: 500, marginBottom: 8, color: "var(--color-text-secondary)" }}>
+            <div className="section-label">
               {docs.length} documents
             </div>
             {loading ? (
-              <div style={{ fontSize: 13, color: "var(--color-text-secondary)" }}>Loading…</div>
+              <div className="empty-state">Loading documents...</div>
             ) : (
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <div className="document-list">
                 {docs.map((d) => <DocumentCard key={d.id} doc={d} colors={DOC_TYPE_COLORS} />)}
               </div>
             )}
           </div>
 
           {/* Right: AI chat scoped to this truck */}
-          <div style={{
-            background: "var(--color-background-primary,#fff)",
-            border: "0.5px solid var(--color-border-tertiary,#e0dfd8)",
-            borderRadius: 12, padding: 16,
-          }}>
-            <div style={{ fontSize: 13, fontWeight: 500, marginBottom: 12, color: "var(--color-text-secondary)" }}>
+          <div className="surface-panel chat-surface">
+            <div className="section-label">
               Ask about truck {selected.unit_number}
             </div>
             <ChatPanel selectedTruckId={selectedId} />
