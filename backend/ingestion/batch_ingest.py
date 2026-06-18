@@ -6,7 +6,6 @@ This is used for backfilling filing-cabinet style document dumps into the
 same DB pipeline that powers API uploads.
 """
 from pathlib import Path
-from typing import Iterable
 
 from sqlalchemy.orm import Session
 
@@ -52,7 +51,8 @@ def ingest_folder(
     Ingest every supported document in a folder.
 
     Returns a summary with successful document IDs and per-file errors so one
-    bad scan does not stop the whole backfill.
+    bad scan does not stop the whole backfill. The caller still controls the
+    final commit for successfully inserted rows.
     """
     summary = {
         "root_dir": str(Path(root_dir)),
@@ -64,20 +64,20 @@ def ingest_folder(
     for path in discover_documents(root_dir):
         summary["attempted"] += 1
         try:
-            doc = ingest_document(
-                str(path),
-                db,
-                metadata_extractor=metadata_extractor,
-                truck_id_override=truck_id_override,
-            )
-            summary["inserted"].append({
-                "doc_id": doc.id,
-                "filename": doc.filename,
-                "truck_id": doc.truck_id,
-                "doc_type": doc.doc_type.value if doc.doc_type else "other",
-            })
+            with db.begin_nested():
+                doc = ingest_document(
+                    str(path),
+                    db,
+                    metadata_extractor=metadata_extractor,
+                    truck_id_override=truck_id_override,
+                )
+                summary["inserted"].append({
+                    "doc_id": doc.id,
+                    "filename": doc.filename,
+                    "truck_id": doc.truck_id,
+                    "doc_type": doc.doc_type.value if doc.doc_type else "other",
+                })
         except Exception as exc:
-            db.rollback()
             summary["errors"].append({
                 "file_path": str(path),
                 "error": str(exc),
