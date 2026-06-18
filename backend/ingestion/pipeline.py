@@ -8,6 +8,7 @@ Flow:
 3. Link metadata to truck, driver, and trailer rows.
 4. Store the document and any structured records in PostgreSQL.
 """
+from collections.abc import Callable
 from datetime import date
 from uuid import uuid4
 
@@ -16,10 +17,15 @@ from sqlalchemy.orm import Session
 from backend.database.models import DocType, Document, FuelRecord, MaintenanceRecord
 from backend.ingestion.document_loader import load_document, load_from_bytes
 from backend.ingestion.entity_linker import link_entities
-from backend.ingestion.metadata_extractor import extract_metadata
+
+MetadataExtractor = Callable[[str], dict]
 
 
-def ingest_document(file_path: str, db: Session) -> Document:
+def ingest_document(
+    file_path: str,
+    db: Session,
+    metadata_extractor: MetadataExtractor | None = None,
+) -> Document:
     """
     Ingest a document from disk and persist the extracted data.
 
@@ -27,10 +33,15 @@ def ingest_document(file_path: str, db: Session) -> Document:
     returned Document has an ID available for downstream RAG/vector indexing.
     """
     loaded = load_document(file_path)
-    return ingest_loaded_document(loaded, db)
+    return ingest_loaded_document(loaded, db, metadata_extractor=metadata_extractor)
 
 
-def ingest_document_bytes(filename: str, content: bytes, db: Session) -> Document:
+def ingest_document_bytes(
+    filename: str,
+    content: bytes,
+    db: Session,
+    metadata_extractor: MetadataExtractor | None = None,
+) -> Document:
     """
     Ingest an uploaded document from in-memory bytes.
 
@@ -38,10 +49,14 @@ def ingest_document_bytes(filename: str, content: bytes, db: Session) -> Documen
     logic outside Charan's ingestion layer.
     """
     loaded = load_from_bytes(filename, content)
-    return ingest_loaded_document(loaded, db)
+    return ingest_loaded_document(loaded, db, metadata_extractor=metadata_extractor)
 
 
-def ingest_loaded_document(loaded: dict, db: Session) -> Document:
+def ingest_loaded_document(
+    loaded: dict,
+    db: Session,
+    metadata_extractor: MetadataExtractor | None = None,
+) -> Document:
     """
     Persist a loaded document dict from document_loader.py.
 
@@ -52,7 +67,8 @@ def ingest_loaded_document(loaded: dict, db: Session) -> Document:
         raise ValueError(f"Document load failed: {loaded['error']}")
 
     raw_text = loaded.get("raw_text") or ""
-    metadata = extract_metadata(raw_text)
+    extractor = metadata_extractor or _default_metadata_extractor
+    metadata = extractor(raw_text)
     linked = link_entities(metadata, db)
 
     document = Document(
@@ -81,6 +97,13 @@ def ingest_loaded_document(loaded: dict, db: Session) -> Document:
     db.flush()
 
     return document
+
+
+def _default_metadata_extractor(raw_text: str) -> dict:
+    """Lazy-load Claude extraction so smoke tests can inject a mock parser."""
+    from backend.ingestion.metadata_extractor import extract_metadata
+
+    return extract_metadata(raw_text)
 
 
 def _create_structured_record(document: Document, metadata: dict, db: Session) -> None:
