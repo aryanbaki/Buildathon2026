@@ -57,6 +57,24 @@ PostgreSQL  ChromaDB
 
 ---
 
+## Charan - DB pipelines
+
+Charan owns the core ingest pipeline and relational database layer for Statement 7. This workstream should start first because the RAG, graph, API, and frontend layers depend on clean document records, reliable truck/driver/trailer links, and seeded sample data.
+
+| Area | Files | Purpose |
+|------|-------|---------|
+| Document ingest | `backend/ingestion/document_loader.py` | Load fleet PDFs, images, CSVs, and scanned files into a normalized document pipeline. |
+| OCR processing | `backend/ingestion/ocr_processor.py` | Extract searchable text from messy scans, photos, receipts, registrations, and tax forms. |
+| Metadata extraction | `backend/ingestion/metadata_extractor.py` | Pull document type, dates, costs, VINs, plate numbers, truck IDs, driver names, trailer IDs, and vendor details. |
+| Entity linking | `backend/ingestion/entity_linker.py` | Link each document to the correct truck, driver, and trailer before storage or retrieval. |
+| Database schema | `backend/database/models.py` | Define SQLAlchemy models for fleet entities, document metadata, costs, renewals, and maintenance records. |
+| Database session | `backend/database/db.py` | Manage database connections, sessions, and table creation for the backend. |
+| Seed data | `backend/database/seed_data.py` | Create realistic synthetic fleet records and 15+ messy sample documents for testing SQL, RAG, and hybrid queries. |
+
+Blocks: `TM1`, `TM3`, `TM4`. Status: `start first`, `core`.
+
+---
+
 ## Repo structure
 
 ```
