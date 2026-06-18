@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext(null);
 
@@ -7,10 +7,6 @@ export function AuthProvider({ children }) {
     try { return JSON.parse(localStorage.getItem("fleet_user")); } catch { return null; }
   });
   const [showLogin, setShowLogin] = useState(false);
-
-  useEffect(() => {
-    if (!user) setShowLogin(false);
-  }, []);
 
   function login(userData) {
     localStorage.setItem("fleet_user", JSON.stringify(userData));
@@ -21,7 +17,7 @@ export function AuthProvider({ children }) {
   function logout() {
     localStorage.removeItem("fleet_user");
     setUser(null);
-    setShowLogin(true);
+    setShowLogin(false);
   }
 
   return (
