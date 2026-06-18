@@ -25,6 +25,7 @@ def ingest_document(
     file_path: str,
     db: Session,
     metadata_extractor: MetadataExtractor | None = None,
+    truck_id_override: str | None = None,
 ) -> Document:
     """
     Ingest a document from disk and persist the extracted data.
@@ -33,7 +34,12 @@ def ingest_document(
     returned Document has an ID available for downstream RAG/vector indexing.
     """
     loaded = load_document(file_path)
-    return ingest_loaded_document(loaded, db, metadata_extractor=metadata_extractor)
+    return ingest_loaded_document(
+        loaded,
+        db,
+        metadata_extractor=metadata_extractor,
+        truck_id_override=truck_id_override,
+    )
 
 
 def ingest_document_bytes(
@@ -41,6 +47,7 @@ def ingest_document_bytes(
     content: bytes,
     db: Session,
     metadata_extractor: MetadataExtractor | None = None,
+    truck_id_override: str | None = None,
 ) -> Document:
     """
     Ingest an uploaded document from in-memory bytes.
@@ -49,13 +56,19 @@ def ingest_document_bytes(
     logic outside Charan's ingestion layer.
     """
     loaded = load_from_bytes(filename, content)
-    return ingest_loaded_document(loaded, db, metadata_extractor=metadata_extractor)
+    return ingest_loaded_document(
+        loaded,
+        db,
+        metadata_extractor=metadata_extractor,
+        truck_id_override=truck_id_override,
+    )
 
 
 def ingest_loaded_document(
     loaded: dict,
     db: Session,
     metadata_extractor: MetadataExtractor | None = None,
+    truck_id_override: str | None = None,
 ) -> Document:
     """
     Persist a loaded document dict from document_loader.py.
@@ -70,6 +83,9 @@ def ingest_loaded_document(
     extractor = metadata_extractor or _default_metadata_extractor
     metadata = extractor(raw_text)
     linked = link_entities(metadata, db)
+
+    if not linked.get("truck_id") and truck_id_override:
+        linked["truck_id"] = truck_id_override
 
     document = Document(
         id=f"doc_{uuid4().hex}",
