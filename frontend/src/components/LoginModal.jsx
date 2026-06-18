@@ -20,11 +20,13 @@ function GoogleButton({ onLogin }) {
     }
     setTimeout(tryRender, 300);
   }, []);
-  return <div id="g-signin-btn" style={{ display: "flex", justifyContent: "center", minHeight: 44 }} />;
+  return <div id="g-signin-btn" style={{ display:"flex", justifyContent:"center", minHeight:44 }} />;
 }
 
+const delay = ms => new Promise(r => setTimeout(r, ms));
+
 export default function LoginModal() {
-  const { login } = useAuth();
+  const { login, setShowLogin } = useAuth();
   const [step, setStep]       = useState("email");
   const [email, setEmail]     = useState("");
   const [password, setPass]   = useState("");
@@ -45,18 +47,26 @@ export default function LoginModal() {
   async function handleTwoFA(e) {
     e.preventDefault(); setError("");
     setLoading(true); await delay(600); setLoading(false);
-    if (code !== VALID_CODE) { setError("Wrong code. Demo code: 248613"); return; }
+    if (code !== VALID_CODE) { setError("Wrong code. Demo: 248613"); return; }
     login({ email, name: email.split("@")[0], avatar: email[0].toUpperCase(), role: "fleet_admin" });
   }
 
   return (
     <div style={{ position:"fixed",inset:0,background:"rgba(0,0,0,.55)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:1000,padding:20 }}>
-      <div style={{ background:"#fff",borderRadius:16,width:"100%",maxWidth:400,boxShadow:"0 24px 60px rgba(0,0,0,.2)",overflow:"hidden" }}>
+      <div style={{ background:"#fff",borderRadius:16,width:"100%",maxWidth:400,boxShadow:"0 24px 60px rgba(0,0,0,.2)",overflow:"hidden",position:"relative" }}>
+
+        {/* X close button */}
+        <button
+          onClick={() => setShowLogin(false)}
+          style={{ position:"absolute",top:12,left:14,background:"none",border:"none",color:"#9898B0",fontSize:22,cursor:"pointer",zIndex:10,lineHeight:1 }}
+        >✕</button>
+
         <div style={{ background:"#1A1A2E",padding:"28px 32px 24px",textAlign:"center" }}>
           <div style={{ fontSize:28,marginBottom:8 }}>🚛</div>
           <div style={{ color:"#fff",fontSize:18,fontWeight:600 }}>Fleet Document Intelligence</div>
           <div style={{ color:"#9898B0",fontSize:13,marginTop:4 }}>Sign in to your account</div>
         </div>
+
         <div style={{ padding:"28px 32px" }}>
           <div style={{ display:"flex",gap:6,marginBottom:24 }}>
             {["email","password","twofa"].map((s,i) => (
@@ -116,6 +126,7 @@ export default function LoginModal() {
             </form>
           )}
         </div>
+
         <div style={{ padding:"0 32px 20px",textAlign:"center",fontSize:11,color:"#9C9890" }}>
           AI Buildathon Dallas 2026 · Secure fleet document access
         </div>
@@ -124,7 +135,6 @@ export default function LoginModal() {
   );
 }
 
-const delay = ms => new Promise(r => setTimeout(r, ms));
 const L  = { display:"block",fontSize:12,fontWeight:600,color:"#6B6965",marginBottom:6,textTransform:"uppercase",letterSpacing:".05em" };
 const I  = { width:"100%",padding:"10px 14px",fontSize:15,border:"1px solid #E4E2D9",borderRadius:8,outline:"none",background:"#FAFAFA" };
 const ER = { fontSize:12,color:"#DC2626",background:"#FEE2E2",border:"1px solid #FECACA",borderRadius:8,padding:"8px 12px",marginBottom:12 };

@@ -9,7 +9,7 @@ export function AuthProvider({ children }) {
   const [showLogin, setShowLogin] = useState(false);
 
   useEffect(() => {
-    if (!user) setShowLogin(true);
+    if (!user) setShowLogin(false);
   }, []);
 
   function login(userData) {

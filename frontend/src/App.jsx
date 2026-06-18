@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
 import LoginModal from "./components/LoginModal.jsx";
 import Sidebar from "./components/Sidebar.jsx";
+import Landing from "./pages/Landing.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import AskAI from "./pages/AskAI.jsx";
 import TruckView from "./pages/TruckView.jsx";
@@ -11,25 +12,32 @@ import Settings from "./pages/Settings.jsx";
 
 function AppShell() {
   const { user, showLogin } = useAuth();
+
+  if (!user) {
+    return (
+      <>
+        <Landing />
+        {showLogin && <LoginModal />}
+      </>
+    );
+  }
+
   return (
-    <>
-      {showLogin && <LoginModal />}
-      <div style={{ display: "flex", minHeight: "100vh", filter: showLogin ? "blur(3px)" : "none", transition: "filter .2s" }}>
-        <Sidebar />
-        <main style={{ flex: 1, overflowY: "auto", minHeight: "100vh" }}>
-          <Routes>
-            <Route path="/"              element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard"     element={<Dashboard />} />
-            <Route path="/ask"           element={<AskAI />} />
-            <Route path="/trucks"        element={<TruckView />} />
-            <Route path="/trucks/:truckId" element={<TruckView />} />
-            <Route path="/about"         element={<About />} />
-            <Route path="/contact"       element={<Contact />} />
-            <Route path="/settings"      element={<Settings />} />
-          </Routes>
-        </main>
-      </div>
-    </>
+    <div style={{ display: "flex", minHeight: "100vh" }}>
+      <Sidebar />
+      <main style={{ flex: 1, overflowY: "auto", minHeight: "100vh" }}>
+        <Routes>
+          <Route path="/"                element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard"       element={<Dashboard />} />
+          <Route path="/ask"             element={<AskAI />} />
+          <Route path="/trucks"          element={<TruckView />} />
+          <Route path="/trucks/:truckId" element={<TruckView />} />
+          <Route path="/about"           element={<About />} />
+          <Route path="/contact"         element={<Contact />} />
+          <Route path="/settings"        element={<Settings />} />
+        </Routes>
+      </main>
+    </div>
   );
 }
 
