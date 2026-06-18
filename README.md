@@ -57,9 +57,9 @@ PostgreSQL  ChromaDB
 
 ---
 
-## Charan - DB pipelines
+## DB pipelines
 
-Charan owns the core ingest pipeline and relational database layer for Statement 7. This workstream should start first because the RAG, graph, API, and frontend layers depend on clean document records, reliable truck/driver/trailer links, and seeded sample data.
+This workstream should start first because the RAG, graph, API, and frontend layers depend on clean document records, reliable truck/driver/trailer links, and seeded sample data.
 
 | Area | Files | Purpose |
 |------|-------|---------|
