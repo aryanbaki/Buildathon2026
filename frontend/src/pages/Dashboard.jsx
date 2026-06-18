@@ -45,7 +45,7 @@ export default function Dashboard() {
     <div className="page-wrap dashboard-page">
       <header className="page-hero">
         <div>
-          <span className="eyebrow">FleetMind AI command center</span>
+          <span className="eyebrow">AI Trucky command center</span>
           <h1>Fleet document intelligence</h1>
           <p>
             Ask fleet questions, upload documents, monitor expiring records, and
@@ -59,7 +59,7 @@ export default function Dashboard() {
         <div className="modal-backdrop" onClick={() => setShowVideo(false)}>
           <div className="modal-card" onClick={(event) => event.stopPropagation()}>
             <div className="modal-header">
-              <strong>How FleetMind AI works</strong>
+              <strong>How AI Trucky works</strong>
               <button onClick={() => setShowVideo(false)}>x</button>
             </div>
             <div className="workflow-grid modal-workflow">

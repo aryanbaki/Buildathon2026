@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     confidence_threshold: float = 0.65
 
     # App
-    app_name: str = "Fleet Document Intelligence"
+    app_name: str = "TRUCKY | AI Trucky"
     debug: bool = False
     demo_mode: bool = False
     upload_dir: str = "./data/raw_documents"

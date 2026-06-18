@@ -2,8 +2,8 @@ import streamlit as st
 
 
 st.set_page_config(
-    page_title="Fleet Document Intelligence",
-    page_icon="FDI",
+    page_title="TRUCKY | AI Trucky",
+    page_icon="T",
     layout="wide",
 )
 
@@ -130,7 +130,7 @@ def metric_card(label: str, value: str):
     st.metric(label, value)
 
 
-st.title("Fleet Document Intelligence")
+st.title("TRUCKY")
 st.caption("AI Buildathon Dallas 2026 - Statement 7")
 
 overview, ask_ai, trucks, rag_graph = st.tabs([

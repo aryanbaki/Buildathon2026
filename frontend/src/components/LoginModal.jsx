@@ -54,7 +54,7 @@ export default function LoginModal() {
       <div style={{ background:"#fff",borderRadius:16,width:"100%",maxWidth:400,boxShadow:"0 24px 60px rgba(0,0,0,.2)",overflow:"hidden" }}>
         <div style={{ background:"#1A1A2E",padding:"28px 32px 24px",textAlign:"center" }}>
           <div style={{ fontSize:28,marginBottom:8 }}>🚛</div>
-          <div style={{ color:"#fff",fontSize:18,fontWeight:600 }}>Fleet Document Intelligence</div>
+          <div style={{ color:"#fff",fontSize:18,fontWeight:600 }}>TRUCKY</div>
           <div style={{ color:"#9898B0",fontSize:13,marginTop:4 }}>Sign in to your account</div>
         </div>
         <div style={{ padding:"28px 32px" }}>
@@ -79,7 +79,7 @@ export default function LoginModal() {
               </div>
               {CLIENT_ID
                 ? <GoogleButton onLogin={login} />
-                : <button type="button" onClick={()=>login({email:"demo@fleetai.com",name:"Demo User",avatar:"D",role:"fleet_admin"})} style={BG}>Sign in with Google (demo)</button>
+                : <button type="button" onClick={()=>login({email:"demo@trucky.ai",name:"Demo User",avatar:"D",role:"fleet_admin"})} style={BG}>Sign in with Google (demo)</button>
               }
             </form>
           )}

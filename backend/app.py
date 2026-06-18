@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.api.routes import router
 from backend.database.db import init_db
 
-app = FastAPI(title="Fleet Document Intelligence", version="1.0.0")
+app = FastAPI(title="TRUCKY | AI Trucky", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,

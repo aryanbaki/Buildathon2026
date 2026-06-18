@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import BrandLogo from "../components/BrandLogo.jsx";
 
 const TEAM = [
   ["Yesh Salapu", "Frontend Engineer", "React UI, routing, dashboard surfaces, and component polish."],
@@ -20,7 +21,7 @@ const STACK = [
 
 const cards = [
   ["Problem", "Trucking teams manage high-volume paperwork across receipts, registrations, inspections, tax forms, titles, and maintenance records."],
-  ["Solution", "FleetMind AI links documents to trucks, drivers, trailers, dates, costs, and source snippets so operators can ask questions in plain English."],
+  ["Solution", "AI Trucky links documents to trucks, drivers, trailers, dates, costs, and source snippets so operators can ask questions in plain English."],
   ["Impact", "Fleet operators, dispatchers, managers, and accounting teams can find the right evidence faster without guessing or digging through files."],
 ];
 
@@ -29,9 +30,9 @@ export default function About() {
     <div className="public-page about-public">
       <nav className="public-nav">
         <Link to="/" className="brand-lockup">
-          <span className="brand-mark">FM</span>
+          <BrandLogo />
           <span>
-            <strong>FleetMind AI</strong>
+            <strong>TRUCKY</strong>
             <small>Project overview</small>
           </span>
         </Link>
@@ -47,7 +48,7 @@ export default function About() {
             <span className="eyebrow">AI Buildathon Dallas 2026</span>
             <h1>Fleet document intelligence for messy trucking operations.</h1>
             <p>
-              FleetMind AI is a buildathon MVP for Statement 7: turn unstructured
+              AI Trucky is a buildathon MVP for Statement 7: turn unstructured
               fleet paperwork into searchable, grounded operational intelligence.
             </p>
           </div>

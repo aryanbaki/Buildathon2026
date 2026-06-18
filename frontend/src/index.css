@@ -145,6 +145,26 @@ input:focus, select:focus, textarea:focus {
 .brand-lockup { display: inline-flex; align-items: center; gap: 12px; }
 .brand-lockup strong { display: block; font-size: 15px; line-height: 1.2; }
 .brand-lockup small { display: block; color: var(--muted); font-size: 11px; }
+.brand-logo {
+  width: 42px;
+  height: 42px;
+  display: inline-grid;
+  place-items: center;
+  overflow: hidden;
+  flex: 0 0 auto;
+  border: 1px solid rgba(52, 211, 153, 0.26);
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.14), rgba(245, 158, 11, 0.10));
+  box-shadow: 0 16px 36px rgba(34, 197, 94, 0.20);
+}
+.brand-logo-sm { width: 36px; height: 36px; border-radius: 8px; }
+.brand-logo img {
+  width: 210%;
+  height: 160%;
+  object-fit: cover;
+  object-position: 54% 54%;
+  filter: saturate(1.08) contrast(1.05);
+}
 .brand-mark {
   width: 38px;
   height: 38px;

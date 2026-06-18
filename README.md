@@ -1,4 +1,4 @@
-# FleetMind AI
+# TRUCKY
 > AI Buildathon Dallas 2026 — Statement 7
 
 **Transform unstructured fleet documents into instant, grounded operational intelligence.**
@@ -19,7 +19,7 @@ Trucking carriers run on paper. An active fleet generates 50+ documents every we
 
 A system that ingests every fleet document, links each one to the correct truck, driver, and trailer, and lets an operator ask any question in plain English — with every answer grounded in a real source document or database row.
 
-FleetMind AI is the public-facing product identity for the demo experience. It presents the same backend and document intelligence capabilities through a polished dark trucking AI SaaS flow: public landing page, public project page, sign-in, then protected operator dashboard.
+TRUCKY is the public-facing website identity for the demo experience, and AI Trucky is the assistant/product name used inside the app. It presents the same backend and document intelligence capabilities through a polished dark trucking AI SaaS flow: public landing page, public project page, sign-in, then protected operator dashboard.
 
 ---
 
@@ -47,14 +47,14 @@ The graph module is intentional, not extra scope. It builds a lightweight knowle
 
 | Person | Project section | What they built |
 |--------|-----------------|-----------------|
-| **Yesh** | Frontend experience | Built the React/Vite app shell, routing, public FleetMind AI landing flow, sign-in experience, dashboard views, truck view, Ask AI screen, upload UI, reusable visual components, and the API client used by the frontend. |
+| **Yesh** | Frontend experience | Built the React/Vite app shell, routing, public AI Trucky landing flow, sign-in experience, dashboard views, truck view, Ask AI screen, upload UI, reusable visual components, and the API client used by the frontend. |
 | **Charan** | Ingestion + database | Built the PostgreSQL/SQLAlchemy schema, document loader, OCR path, metadata extraction hooks, entity linker, upload storage, batch ingestion pipeline, seed/bootstrap data flow, and persisted records for trucks, drivers, trailers, documents, maintenance, and fuel. |
 | **Aryan** | RAG + knowledge graph | Built the RAG retrieval layer, ChromaDB embedding/chunking flow, metadata-aware vector store, truck/driver/trailer filters, confidence thresholding, source-ready retrieval results, and graph helpers for truck-driver-trailer-document relationships. |
 | **Teja** | AI agents + API | Built the FastAPI entrypoint and routes, SQL/RAG/hybrid/web query router, SQL agent, document agent, hybrid answer path, hallucination guardrails, Tavily-backed public search hooks, demo-mode agents, and health/credential checks. |
 
 ### Section ownership details
 
-* **Frontend and product polish:** Yesh's frontend work is the visible operator experience. The final FleetMind AI interface keeps the existing dashboard/tools, adds the public landing page first, protects app routes behind sign-in, and uses the dark trucking SaaS theme.
+* **Frontend and product polish:** Yesh's frontend work is the visible operator experience. The final AI Trucky interface keeps the existing dashboard/tools, adds the public landing page first, protects app routes behind sign-in, and uses the dark trucking SaaS theme.
 * **Document ingestion and structured records:** Charan's pipeline turns uploads or generated files into stored source documents and structured database rows that the dashboard, SQL agent, and RAG layer can use.
 * **Retrieval and graph intelligence:** Aryan's section makes fleet documents searchable with citations, normalizes truck and trailer metadata, rejects weak retrieval matches, and exposes relationship context through the knowledge graph.
 * **Agent orchestration and backend API:** Teja's agent/API layer decides whether a question should use SQL, document retrieval, hybrid reasoning, or web context, then returns a unified response for the frontend.
@@ -67,7 +67,7 @@ Aryan's branch focuses on the RAG/retrieval contract: retrieve the right source 
 
 This branch includes the current working pieces needed to test Aryan's section with the rest of the app:
 
-* **Yesh frontend + FleetMind UI flow**: Vite/React app shell, public landing page, public About page, sign-in route, protected dashboard, truck view, Ask AI page, chat panel, upload component, and API client.
+* **Yesh frontend + TRUCKY UI flow**: Vite/React app shell, public landing page, public About page, sign-in route, protected dashboard, truck view, Ask AI page, chat panel, upload component, and API client.
 * **Charan backend pipeline from `origin/charan-branch`**: persisted upload storage, batch ingestion, end-to-end document ingestion, and the API upload path that feeds Aryan's vector store.
 * **Aryan RAG + graph from `aryan_branch`**: chunking, metadata-aware Chroma storage, truck/trailer-aware retrieval, confidence filtering, and graph relationship helpers.
 * **Teja agent layer from `origin/teja_branch`**: trailer-aware routing, SQL/RAG/hybrid delegation, hallucination guardrails, profitability query guidance, and optional Tavily web lookups for recalls, DOT/FMCSA rules, and fuel prices.
@@ -254,7 +254,7 @@ The app now opens as a public website before showing protected fleet tools:
 
 | Route | Access | Purpose |
 |-------|--------|---------|
-| `/` | Public | FleetMind AI landing page with product positioning, workflow, feature cards, and dashboard preview |
+| `/` | Public | AI Trucky landing page with product positioning, workflow, feature cards, and dashboard preview |
 | `/about` | Public | Buildathon project page covering problem, solution, impact, team roles, and tech stack |
 | `/login` | Public | Demo sign-in flow; successful sign-in stores the local demo user and redirects to `/dashboard` |
 | `/dashboard` | Protected | Existing fleet command dashboard with stats, suggested queries, upload flow, and truck roster |
@@ -269,12 +269,12 @@ If a visitor tries to open a protected route before signing in, React Router red
 The public About page explains the same buildathon story that judges need from the README:
 
 * **Problem:** trucking teams manage high-volume, messy paperwork across receipts, registrations, inspections, tax forms, titles, and maintenance records.
-* **Solution:** FleetMind AI links documents to trucks, drivers, trailers, dates, costs, and source snippets so operators can ask questions in plain English.
+* **Solution:** AI Trucky links documents to trucks, drivers, trailers, dates, costs, and source snippets so operators can ask questions in plain English.
 * **Impact:** operators, dispatchers, fleet managers, and accounting teams can find evidence faster without guessing or digging through files.
 * **Team roles:** Yesh owns frontend, Charan owns ingestion/database, Aryan owns RAG and graph retrieval, and Teja owns AI agents/API.
 * **Tech stack:** React/Vite, FastAPI, PostgreSQL, SQLAlchemy, ChromaDB, sentence-transformers, Tesseract OCR, Claude Haiku/Sonnet, Tavily, and Docker Compose.
 
-No external design assets are used. The FleetMind mark, truck illustration, and dashboard preview are local React/CSS.
+The TRUCKY moving truck logo is a user-provided local GIF asset. The truck illustration, dashboard preview, and surrounding UI visuals are local React/CSS.
 
 ---
 

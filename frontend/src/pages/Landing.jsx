@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import BrandLogo from "../components/BrandLogo.jsx";
 import truckModelUrl from "../assets/truck/truck.glb?url";
 import truckPreviewUrl from "../assets/truck/truck-preview.png";
 
@@ -25,11 +26,11 @@ export default function Landing() {
   return (
     <div className="public-page">
       <nav className="public-nav">
-        <Link to="/" className="brand-lockup" aria-label="FleetMind AI home">
-          <span className="brand-mark">FM</span>
+        <Link to="/" className="brand-lockup" aria-label="TRUCKY home">
+          <BrandLogo />
           <span>
-            <strong>FleetMind AI</strong>
-            <small>Document Intelligence</small>
+            <strong>TRUCKY</strong>
+            <small>AI Trucky</small>
           </span>
         </Link>
         <div className="public-nav-links">
@@ -44,7 +45,7 @@ export default function Landing() {
           <span className="eyebrow">AI Buildathon Dallas 2026</span>
           <h1>Turn trucking paperwork into operator-ready intelligence.</h1>
           <p>
-            FleetMind AI helps trucking teams organize back-office documents,
+            AI Trucky helps trucking teams organize back-office documents,
             connect them to drivers, trucks, trailers, and loads, and give
             operators a clearer view of what needs attention.
           </p>
@@ -123,7 +124,7 @@ export default function Landing() {
             upload flow, truck view, API fallback data, and source-based answer
             workflow.
           </p>
-          <Link className="btn btn-primary" to="/login">Open FleetMind AI</Link>
+          <Link className="btn btn-primary" to="/login">Open AI Trucky</Link>
         </div>
         <div className="dashboard-preview">
           <div className="mini-topbar" />
@@ -138,7 +139,7 @@ export default function Landing() {
       </section>
 
       <footer className="public-footer">
-        <span>FleetMind AI</span>
+        <span>TRUCKY</span>
         <span>Built for Statement 7 · AI Buildathon Dallas 2026</span>
         <Link to="/about">Project details</Link>
       </footer>

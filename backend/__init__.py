@@ -1,1 +1,1 @@
-"""Backend package for Fleet Document Intelligence."""
+"""Backend package for TRUCKY."""

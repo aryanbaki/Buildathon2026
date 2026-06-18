@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import BrandLogo from "./BrandLogo.jsx";
 
 const NAV_TOP = [
   { to: "/dashboard", label: "Dashboard", icon: "⬡" },
@@ -38,10 +39,10 @@ export default function Sidebar() {
       {/* Logo */}
       <div style={{ padding: "22px 18px 18px", borderBottom: "1px solid rgba(52,211,153,.10)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 34, height: 34, background: "linear-gradient(135deg, #22c55e, #f59e0b)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 800, color: "#03130c" }}>FM</div>
+          <BrandLogo size="sm" />
           <div>
-            <div style={{ color: "#ecfdf5", fontSize: 14, fontWeight: 700 }}>FleetMind AI</div>
-            <div style={{ color: "#93a39a", fontSize: 11 }}>Document intelligence</div>
+            <div style={{ color: "#ecfdf5", fontSize: 14, fontWeight: 700 }}>TRUCKY</div>
+            <div style={{ color: "#93a39a", fontSize: 11 }}>AI Trucky</div>
           </div>
         </div>
       </div>

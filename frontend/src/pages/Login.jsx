@@ -2,6 +2,7 @@ import React from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
+import BrandLogo from "../components/BrandLogo.jsx";
 
 const VALID_CODE = "248613";
 
@@ -67,17 +68,17 @@ export default function Login() {
   }
 
   function demoLogin() {
-    login({ email: "demo@fleetmind.ai", name: "Demo Operator", avatar: "D", role: "fleet_admin" });
+    login({ email: "demo@trucky.ai", name: "Demo Operator", avatar: "D", role: "fleet_admin" });
     navigate("/dashboard", { replace: true });
   }
 
   return (
     <div className="auth-page">
       <Link to="/" className="brand-lockup auth-brand">
-        <span className="brand-mark">FM</span>
+        <BrandLogo />
         <span>
-          <strong>FleetMind AI</strong>
-          <small>Operator access</small>
+          <strong>TRUCKY</strong>
+          <small>AI Trucky access</small>
         </span>
       </Link>
 
